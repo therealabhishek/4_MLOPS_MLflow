@@ -1,12 +1,3 @@
-# >>> setting up remote server:
-# - go to Dagshub (sign up with github)
-# - create > new repo > connect a repo > github > select the repo > connect repo > 
-#   go to dagshub repo > remote > experiments > copy tracking uri
-
-# https://dagshub.com/therealabhishek/4_MLOPS_MLflow.mlflow
-
-
-
 import mlflow
 import mlflow.sklearn
 from sklearn.datasets import load_wine
@@ -30,11 +21,12 @@ y = wine.target
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.10, random_state=42)
 
 # Define the params for RF model
-max_depth = 8
-n_estimators = 5
+max_depth = 16
+n_estimators = 9
 
 # Mention your experiment below
-mlflow.set_experiment('expmnt1-remote-server')
+mlflow.autolog()
+mlflow.set_experiment('expmnt2-remote-server')
 
 with mlflow.start_run():
     rf = RandomForestClassifier(max_depth=max_depth, n_estimators=n_estimators, random_state=42)
@@ -42,10 +34,6 @@ with mlflow.start_run():
 
     y_pred = rf.predict(X_test)
     accuracy = accuracy_score(y_test, y_pred)
-
-    mlflow.log_metric('accuracy', accuracy)
-    mlflow.log_param('max_depth', max_depth)
-    mlflow.log_param('n_estimators', n_estimators)
 
     # Creating a confusion matrix plot
     cm = confusion_matrix(y_test, y_pred)
@@ -59,13 +47,9 @@ with mlflow.start_run():
     plt.savefig("Confusion-matrix.png")
 
     # log artifacts using mlflow
-    mlflow.log_artifact("Confusion-matrix.png")
     mlflow.log_artifact(__file__)
 
     # tags
     mlflow.set_tags({"Author": 'Abhishek', "Project": "Wine Classification"})
-
-    # Log the model
-    mlflow.sklearn.log_model(rf, "Random-Forest-Model")
 
     print(accuracy)
