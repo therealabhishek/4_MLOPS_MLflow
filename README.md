@@ -12,4 +12,4 @@ In this repo we have covered the following MLflow functionalities:
 
 4. Auto logging model parameters, metrics and artifacts.
 
-5. 
+5. Logging parameters of hyperparameter tuning.
